@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const translations = {};
     let currentLanguage = 'en'; // Default language
+    const languageSelector = document.getElementById('language-selector');
 
     const loadTranslations = async (lang) => {
         try {
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         document.documentElement.lang = lang;
+        languageSelector.value = lang;
     };
 
     const setLanguage = async (lang) => {
@@ -60,10 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const initialLang = getInitialLanguage();
         await setLanguage(initialLang);
 
-        // Language switcher event listeners
-        document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
-        document.getElementById('lang-es').addEventListener('click', () => setLanguage('es'));
-        document.getElementById('lang-zh').addEventListener('click', () => setLanguage('zh'));
+        languageSelector.addEventListener('change', (event) => {
+            setLanguage(event.target.value);
+        });
     };
 
     init();
