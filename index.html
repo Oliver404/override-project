@@ -54,15 +54,18 @@
             right: 1rem;
             z-index: 10;
         }
-        .language-switcher button {
+        .language-switcher select {
             background-color: #4a5568;
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 0.25rem;
-            margin-left: 0.5rem;
+            border: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
             cursor: pointer;
         }
-        .language-switcher button:hover {
+        .language-switcher select:hover {
             background-color: #2d3748;
         }
     </style>
@@ -71,9 +74,11 @@
 
     <!-- Language Switcher -->
     <div class="language-switcher">
-        <button id="lang-en">EN</button>
-        <button id="lang-es">ES</button>
-        <button id="lang-zh">ZH</button>
+        <select id="language-selector">
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+            <option value="zh">ZH</option>
+        </select>
     </div>
 
     <!-- Contenido principal -->
