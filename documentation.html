@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Override Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="dist/css/style.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
+    <div id="header-placeholder"></div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 p-4 space-y-4 shadow-lg">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold">Documentation</h2>
+                <button id="sidebar-toggle" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="sidebar-menu"></div>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 p-8">
+            <button id="sidebar-open" class="hidden fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded-md">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div id="search-container" class="mb-4">
+                <input type="text" id="search-input" placeholder="Search documentation..." class="w-full p-2 border rounded-md bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                <div id="search-results" class="mt-2"></div>
+            </div>
+            <div id="documentation-content" class="prose dark:prose-invert max-w-none">
+                <!-- Content will be loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <script src="dist/js/showdown.min.js"></script>
+    <script src="dist/js/lunr.min.js"></script>
+    <script src="dist/js/header.js"></script>
+    <script src="dist/js/documentation.js"></script>
+</body>
+</html>
