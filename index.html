@@ -12,7 +12,7 @@
 </head>
 <body class="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <!-- Header injected by header.js -->
-    <div id="header-placeholder"></div>
+    <div id="header-placeholder" class="flex-shrink-0"></div>
 
     <!-- Main Content -->
     <main class="flex-grow flex items-center justify-center p-4">
@@ -43,35 +43,12 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="p-4 flex justify-between items-end relative">
-        <div class="absolute bottom-4 left-4 flex flex-col items-center">
-            <div class="relative">
-                <div style="position: relative; display: inline-block;">
-                    <img src="./logo.jpg" alt="Imagen circular" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
-                    <div style="
-                      position: absolute;
-                      bottom: -10px;
-                      left: 50%;
-                      transform: translateX(-50%);
-                      background: #333;
-                      color: white;
-                      padding: 5px 10px;
-                      border-radius: 12px;
-                      font-size: 14px;
-                      white-space: nowrap;">
-                      Working hard
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="text-right text-sm text-gray-400 absolute bottom-4 right-4">
-            <span>Developed by:</span><a href="https://github.com/Oliver404"> <span class="font-semibold text-purple-400">Oliver 404</span></a>
-        </div>
+    <!-- GLOBAL FOOTER -->
+    <footer id="global-footer" class="bg-gray-200 dark:bg-gray-800 text-center p-4 text-sm text-gray-600 dark:text-gray-400 flex-shrink-0">
+        <p>&copy; 2024 Override Project. All Rights Reserved.</p>
     </footer>
 
     <!-- Scripts -->
-    <script src="dist/js/app.js"></script>
-    <script src="dist/js/header.js"></script>
+    <script src="dist/app.bundle.js"></script>
 </body>
 </html>
