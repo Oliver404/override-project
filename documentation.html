@@ -4,43 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentation - Override Project</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts and Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Prism.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="dist/css/style.css">
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
+
+    <!-- Header injected by header.js -->
     <div id="header-placeholder"></div>
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 p-4 space-y-4 shadow-lg">
+    <div class="flex container mx-auto">
+        <!-- Left Sidebar: Global Documentation Navigation -->
+        <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 p-4 space-y-4 shadow-lg h-screen sticky top-16 hidden md:block">
             <div class="flex justify-between items-center">
-                <h2 class="text-xl font-bold">Documentation</h2>
-                <button id="sidebar-toggle" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                <h2 class="text-xl font-bold" data-i18n="documentation">Documentation</h2>
+                <button id="sidebar-toggle" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 md:hidden">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div id="sidebar-menu"></div>
+            <div id="search-container" class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="search-input" data-i18n-placeholder="search_docs" class="w-full p-2 pl-10 border rounded-md bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+            </div>
+            <div id="search-results" class="mt-2"></div>
+            <nav id="sidebar-menu" class="overflow-y-auto"></nav>
         </aside>
 
-        <!-- Main Content -->
-        <main id="main-content" class="flex-1 p-8">
-            <button id="sidebar-open" class="hidden fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded-md">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div id="search-container" class="mb-4">
-                <input type="text" id="search-input" placeholder="Search documentation..." class="w-full p-2 border rounded-md bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                <div id="search-results" class="mt-2"></div>
-            </div>
-            <div id="documentation-content" class="prose dark:prose-invert max-w-none">
-                <!-- Content will be loaded here -->
+        <!-- Main Content Area -->
+        <main id="main-content" class="flex-1 p-8 overflow-y-auto">
+            <div class="max-w-3xl mx-auto">
+                <!-- Breadcrumbs -->
+                <nav id="breadcrumbs" aria-label="Breadcrumb" class="mb-4 text-sm text-gray-500 dark:text-gray-400"></nav>
+
+                <!-- Documentation Content -->
+                <article id="documentation-content" class="prose dark:prose-invert max-w-none"></article>
+
+                <!-- Footer -->
+                <footer id="page-footer" class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400">
+                    <p><span data-i18n="last_updated">Last Updated</span>: <span id="last-updated-date"></span></p>
+                </footer>
             </div>
         </main>
+
+        <!-- Right Sidebar: Table of Contents -->
+        <aside id="toc-sidebar" class="w-56 p-4 h-screen sticky top-16 hidden lg:block">
+            <h3 class="font-semibold mb-2">On this page</h3>
+            <nav id="toc-menu"></nav>
+        </aside>
     </div>
 
+    <!-- Mobile Sidebar Toggle -->
+    <button id="sidebar-open" class="md:hidden fixed bottom-4 right-4 z-50 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="dist/js/showdown.min.js"></script>
     <script src="dist/js/lunr.min.js"></script>
+    <script src="dist/js/app.js"></script>
     <script src="dist/js/header.js"></script>
     <script src="dist/js/documentation.js"></script>
 </body>
