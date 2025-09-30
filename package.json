@@ -4,12 +4,16 @@
   "description": "Optimizing the Override Project website",
   "main": "index.html",
   "scripts": {
-    "build:css": "node node_modules/tailwindcss/lib/cli.js build -i src/input.css -o dist/output.css"
+    "build:css": "node node_modules/tailwindcss/lib/cli.js build -i src/input.css -o dist/css/style.css"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "lunr": "^2.3.9",
+    "showdown": "^2.1.0"
   }
 }
