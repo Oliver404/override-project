@@ -1,0 +1,14 @@
+{
+  "en": [
+    {
+      "title": "Getting Started",
+      "file": "getting-started.md"
+    }
+  ],
+  "es": [
+    {
+      "title": "Empezando",
+      "file": "getting-started.md"
+    }
+  ]
+}

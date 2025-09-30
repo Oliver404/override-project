@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- DOM Elements ---
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebarOpen = document.getElementById('sidebar-open');
@@ -6,178 +7,219 @@ document.addEventListener('DOMContentLoaded', () => {
     const documentationContent = document.getElementById('documentation-content');
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
+    const tocMenu = document.getElementById('toc-menu');
+    const breadcrumbsContainer = document.getElementById('breadcrumbs');
+    const lastUpdatedDate = document.getElementById('last-updated-date');
 
-    const converter = new showdown.Converter({ ghCompatibleHeaderId: true });
+    // Check if we are on the documentation page
+    if (!documentationContent) return;
+
+    // --- State ---
+    const currentLang = getLanguage(); // From app.js
+    let docsConfig = {};
     let searchIndex;
-    const documents = {};
-    let currentDoc = '';
+    let documents = {};
+    let currentDocInfo = {};
+    let translations = {};
 
-    // List of documentation files
-    const docFiles = [
-        'docs/getting-started.md'
-    ];
+    // --- Showdown and Prism Setup ---
+    const converter = new showdown.Converter({ ghCompatibleHeaderId: true, tables: true, simplifiedAutoLink: true });
 
-    // Function to generate a slug for a header
-    const slugify = (text) => {
-        return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
-    };
+    // --- Document Loading and Rendering ---
+    const loadDocument = async (docInfo) => {
+        if (!docInfo || !docInfo.file) return;
+        currentDocInfo = docInfo;
+        const filePath = `docs/${currentLang}/${docInfo.file}`;
 
-    // Fetch and load a document
-    const loadDocument = async (file, anchor) => {
         try {
-            const response = await fetch(file);
+            const response = await fetch(filePath);
+            if (!response.ok) throw new Error(`Failed to fetch ${filePath}`);
             const markdown = await response.text();
-            documents[file] = markdown; // Store the document content
+
+            // Render Markdown and update content
             documentationContent.innerHTML = converter.makeHtml(markdown);
-            currentDoc = file;
 
-            if (anchor) {
-                setTimeout(() => {
-                    const element = document.getElementById(anchor);
-                    if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }, 100);
-            }
-        } catch (error) {
-            documentationContent.innerHTML = `<p class="text-red-500">Error loading document: ${file}</p>`;
-            console.error(error);
-        }
-    };
+            // Post-render actions
+            Prism.highlightAllUnder(documentationContent);
+            updateBreadcrumbs();
+            buildToc();
+            updateFooter();
 
-    // Build the sidebar menu
-    const buildSidebar = async () => {
-        const menuList = document.createElement('ul');
-        menuList.className = 'space-y-2';
-
-        for (const file of docFiles) {
-            const listItem = document.createElement('li');
-            const response = await fetch(file);
-            const markdown = await response.text();
-            const title = file.replace('docs/', '').replace('.md', '');
-
-            const fileButton = document.createElement('button');
-            fileButton.textContent = title;
-            fileButton.className = 'w-full text-left py-2 px-4 rounded hover:bg-gray-200 dark:hover:bg-gray-700 font-bold flex justify-between items-center';
-
-            const sublist = document.createElement('ul');
-            sublist.className = 'pl-4 mt-2 space-y-1 hidden';
-
-            const headers = markdown.match(/^##\s(.+)/gm);
-            if (headers) {
-                headers.forEach(header => {
-                    const headerText = header.replace('## ', '');
-                    const anchor = slugify(headerText);
-                    const subItem = document.createElement('li');
-                    const subLink = document.createElement('a');
-                    subLink.href = `#${anchor}`;
-                    subLink.textContent = headerText;
-                    subLink.className = 'block py-1 px-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700';
-                    subLink.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        if (currentDoc !== file) {
-                            await loadDocument(file, anchor);
-                        } else {
-                            document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    });
-                    subItem.appendChild(subLink);
-                    sublist.appendChild(subItem);
-                });
-            }
-
-            fileButton.addEventListener('click', async () => {
-                if (currentDoc !== file) {
-                    await loadDocument(file);
-                }
-                sublist.classList.toggle('hidden');
+            // Update active state in sidebar
+            document.querySelectorAll('#sidebar-menu a').forEach(a => {
+                a.classList.toggle('font-bold', a.dataset.file === docInfo.file);
+                a.classList.toggle('bg-gray-200', a.dataset.file === docInfo.file);
+                a.classList.toggle('dark:bg-gray-700', a.dataset.file === docInfo.file);
             });
 
-            listItem.appendChild(fileButton);
-            listItem.appendChild(sublist);
-            menuList.appendChild(listItem);
+        } catch (error) {
+            console.error(`Error loading document: ${filePath}`, error);
+            documentationContent.innerHTML = `<p class="text-red-500">Error loading document. Please check the console for details.</p>`;
         }
+    };
+
+    // --- UI Building (Sidebar, TOC, Breadcrumbs, Footer) ---
+    const buildSidebar = () => {
+        const docList = docsConfig[currentLang] || [];
+        const menuList = document.createElement('ul');
+        menuList.className = 'space-y-1';
+
+        docList.forEach(docInfo => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = '#';
+            link.textContent = docInfo.title;
+            link.dataset.file = docInfo.file;
+            link.className = 'block py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700';
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadDocument(docInfo);
+                if (window.innerWidth < 768) sidebar.classList.add('hidden');
+            });
+            listItem.appendChild(link);
+            menuList.appendChild(listItem);
+        });
+        sidebarMenu.innerHTML = '';
         sidebarMenu.appendChild(menuList);
     };
 
-    // Build the search index
-    const buildSearchIndex = async () => {
-        const fetchPromises = docFiles.map(file =>
-            fetch(file).then(response => response.text()).then(text => ({
-                id: file,
-                title: file.replace('docs/', '').replace('.md', ''),
-                body: text
-            }))
-        );
+    const buildToc = () => {
+        tocMenu.innerHTML = '';
+        const headings = documentationContent.querySelectorAll('h2, h3');
+        if (headings.length === 0) return;
 
-        const docs = await Promise.all(fetchPromises);
-        docs.forEach(doc => {
-            documents[doc.id] = doc.body;
-        });
+        const tocList = document.createElement('ul');
+        tocList.className = 'space-y-2';
 
-        searchIndex = lunr(function () {
-            this.ref('id');
-            this.field('title');
-            this.field('body');
-
-            docs.forEach(doc => {
-                this.add(doc);
+        headings.forEach(h => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = `#${h.id}`;
+            link.textContent = h.textContent;
+            link.className = `block text-sm hover:text-blue-600 dark:hover:text-blue-400 ${h.tagName === 'H3' ? 'ml-4' : ''}`;
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                h.scrollIntoView({ behavior: 'smooth' });
             });
+            listItem.appendChild(link);
+            tocList.appendChild(listItem);
+        });
+        tocMenu.appendChild(tocList);
+    };
+
+    const updateBreadcrumbs = () => {
+        breadcrumbsContainer.innerHTML = `
+            <a href="documentation.html" class="hover:underline">${translations.docs || 'Docs'}</a>
+            <span class="mx-2">/</span>
+            <span>${currentDocInfo.title}</span>
+        `;
+    };
+
+    const updateFooter = () => {
+        lastUpdatedDate.textContent = new Date().toLocaleDateString(currentLang, {
+            year: 'numeric', month: 'long', day: 'numeric'
         });
     };
 
-    // Handle search input
+    // --- Search ---
+    const buildSearchIndex = async () => {
+        const docList = docsConfig[currentLang] || [];
+        const fetchPromises = docList.map(docInfo =>
+            fetch(`docs/${currentLang}/${docInfo.file}`)
+                .then(res => res.text())
+                .then(text => {
+                    const doc = { id: docInfo.file, title: docInfo.title, body: text };
+                    documents[doc.id] = doc;
+                    return doc;
+                })
+        );
+        const docs = await Promise.all(fetchPromises);
+        searchIndex = lunr(function () {
+            this.ref('id');
+            this.field('title', { boost: 10 });
+            this.field('body');
+            docs.forEach(doc => this.add(doc));
+        });
+    };
+
     searchInput.addEventListener('input', () => {
-        const query = searchInput.value;
+        const query = searchInput.value.trim();
         if (query.length < 2) {
             searchResults.innerHTML = '';
             return;
         }
-
         const results = searchIndex.search(query);
         searchResults.innerHTML = '';
-
         if (results.length > 0) {
             const resultList = document.createElement('ul');
-            results.forEach(result => {
-                const docId = result.ref;
-                const title = docId.replace('docs/', '').replace('.md', '');
+            results.slice(0, 5).forEach(result => {
+                const doc = documents[result.ref];
                 const listItem = document.createElement('li');
                 const link = document.createElement('a');
                 link.href = '#';
-                link.textContent = title;
-                link.className = 'block py-1 px-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700';
+                link.textContent = doc.title;
+                link.className = 'block p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700';
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    loadDocument(docId);
-                    searchResults.innerHTML = '';
+                    loadDocument(doc);
                     searchInput.value = '';
+                    searchResults.innerHTML = '';
                 });
                 listItem.appendChild(link);
                 resultList.appendChild(listItem);
             });
             searchResults.appendChild(resultList);
         } else {
-            searchResults.innerHTML = '<p class="p-2">No results found.</p>';
+            searchResults.innerHTML = `<p class="p-2 text-sm">${translations.no_results || 'No results found.'}</p>`;
         }
     });
 
-    // Toggle sidebar visibility
-    sidebarToggle.addEventListener('click', () => {
-        sidebar.classList.add('hidden');
-        sidebarOpen.classList.remove('hidden');
-    });
+    // --- Event Listeners and Initialization ---
+    const setupEventListeners = () => {
+        sidebarToggle?.addEventListener('click', () => sidebar.classList.add('hidden'));
+        sidebarOpen?.addEventListener('click', () => sidebar.classList.remove('hidden'));
 
-    sidebarOpen.addEventListener('click', () => {
-        sidebar.classList.remove('hidden');
-        sidebarOpen.classList.add('hidden');
-    });
+        let activeTocLink = null;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.getAttribute('id');
+                const tocLink = tocMenu.querySelector(`a[href="#${id}"]`);
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    tocLink?.classList.add('font-bold');
+                    activeTocLink = tocLink;
+                } else {
+                    tocLink?.classList.remove('font-bold');
+                }
+            });
+        }, { rootMargin: "0px 0px -80% 0px", threshold: 0.5 });
 
-    // Initialize documentation page
+        documentationContent.querySelectorAll('h2, h3').forEach(h => observer.observe(h));
+    };
+
     const init = async () => {
-        await buildSidebar();
+        try {
+            const [trans, config] = await Promise.all([
+                loadTranslations(currentLang),
+                fetch('docs.json').then(res => res.json())
+            ]);
+            translations = trans;
+            docsConfig = config;
+        } catch (error) {
+            console.error("Failed to load initial configuration", error);
+            documentationContent.innerHTML = '<p class="text-red-500">Could not load documentation configuration (docs.json).</p>';
+            return;
+        }
+
+        buildSidebar();
         await buildSearchIndex();
-        await loadDocument(docFiles[0]); // Load the first document by default
+
+        const initialDoc = (docsConfig[currentLang] && docsConfig[currentLang][0]) || null;
+        if (initialDoc) {
+            await loadDocument(initialDoc);
+        } else {
+            documentationContent.innerHTML = `<p>No documentation available for ${currentLang}.</p>`;
+        }
+        setupEventListeners();
     };
 
     init();
