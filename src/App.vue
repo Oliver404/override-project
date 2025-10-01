@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { computed, watch, onMounted } from 'vue';
+import { computed, watch } from 'vue'; // Eliminamos 'onMounted'
 import { useRoute } from 'vue-router';
 import { RouterView } from 'vue-router';
 import { store } from './store';
@@ -38,23 +38,9 @@ const loadTranslations = async (lang) => {
   }
 };
 
-/**
- * Initializes the theme based on user preference or system settings.
- */
-const initializeTheme = () => {
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme) {
-    store.theme = savedTheme;
-  } else {
-    store.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  document.documentElement.className = store.theme;
-};
-
-// --- Lifecycle Hooks ---
-
 // Watch for changes in the route's language parameter.
-// This makes the entire app reactive to URL changes.
+// This makes the entire app reactive to URL changes, y también se ejecuta 
+// al montar el componente (gracias a { immediate: true }).
 watch(
   () => route.params.lang,
   (newLang) => {
@@ -64,9 +50,4 @@ watch(
   },
   { immediate: true } // Run the watcher immediately on component mount
 );
-
-// Initialize the theme when the app is first mounted.
-onMounted(() => {
-  initializeTheme();
-});
 </script>
