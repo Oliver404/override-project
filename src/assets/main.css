@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* All layout logic, including footer visibility, is now handled by Vue components. */
+/* No special rules are needed here for that. */
