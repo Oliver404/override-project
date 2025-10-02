@@ -1,46 +1,14 @@
 {
   "en": [
     {
-      "title": "General",
-      "isCategory": true,
-      "children": [
-        {
-          "title": "Getting Started",
-          "file": "getting-started.md"
-        }
-      ]
-    },
-    {
-      "title": "Reference",
-      "isCategory": true,
-      "children": [
-        {
-          "title": "Feature Test",
-          "file": "features-test.md"
-        }
-      ]
+      "title": "Getting Started",
+      "file": "getting-started.md"    
     }
   ],
   "es": [
     {
-      "title": "General",
-      "isCategory": true,
-      "children": [
-        {
-          "title": "Empezando",
-          "file": "getting-started.md"
-        }
-      ]
-    },
-    {
-      "title": "Referencia",
-      "isCategory": true,
-      "children": [
-        {
-          "title": "Prueba de Características",
-          "file": "features-test.md"
-        }
-      ]
+      "title": "Empezando",
+      "file": "getting-started.md"
     }
   ]
 }
