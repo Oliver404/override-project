@@ -16,10 +16,10 @@ jobs:
       - run: npm install
       - run: npm run build
       - name: Copy index.html to 404.html for Vue Router
-        run: cp dist/index.html dist/404.html
+        run: cp docs/index.html docs/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: docs
 
   deploy:
     needs: build
