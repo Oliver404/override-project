@@ -1,0 +1,100 @@
+site_name: Override Project
+site_description: Landing page and documentation for the Override Project
+site_author: Oliver 404
+site_url: https://oliver404.github.io/override-project/   # adjust when live
+repo_url: https://github.com/Oliver404/override-project
+copyright: "© Oliver 404"
+
+# Theme: Material for MkDocs with advanced options
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.instant
+    - navigation.top
+    - navigation.expand
+    - header.autohide
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+  language: en
+
+# Multilingual configuration via mkdocs-static-i18n plugin
+plugins:
+  - search:
+      lang: ['en', 'es']
+  - i18n:
+      default_language: en
+      languages:
+        en: English
+        es: Español
+      redirect_on_root: true
+      # Per-language nav can be specified here or inside per-language index files.
+      nav:
+        en:
+          - Home: index.md
+          - Getting started: getting-started.md
+          - Development: development.md
+          - Contributing: contributing.md
+          - Changelog: changelog.md
+        es:
+          - Inicio: index.md
+          - Empezando: getting-started.md
+          - Desarrollo: development.md
+          - Contribuir: contributing.md
+          - Registro de cambios: changelog.md
+  - git-revision-date-localized:
+      enable_creation_date: true
+      fallback_to_build_date: true
+  - minify:
+      minify_html: true
+
+# Markdown extensions (Material + pymdown)
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - footnotes
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.pymdownx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.pymdownx.emoji.to_svg
+  - pymdownx.keys
+  - attr_list
+  - def_list
+
+# Directory settings
+docs_dir: docs
+site_dir: site
+
+# Extra assets and files to include in the site output
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Oliver404/override-project
+  repo_url: https://github.com/Oliver404/override-project
+
+extra_css:
+  - styles/overrides.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+# Optionally enable strict mode during CI to fail on broken links
+strict: false
