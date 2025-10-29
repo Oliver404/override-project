@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docs:serve": "mkdocs serve -a 127.0.0.1:8000",
+    "docs:build": "mkdocs build",
+    "docs:gh-deploy": "mkdocs gh-deploy --force"
   },
   "dependencies": {
     "vue": "^3.4.0",
