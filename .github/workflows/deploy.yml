@@ -32,6 +32,8 @@ jobs:
           pip install -r requirements.txt
       - name: Build docs
         run: mkdocs build --clean
+      - name: Create docs directory in dist
+        run: mkdir -p dist/docs
       - name: Copy docs to dist
         run: cp -r site/* dist/docs
       - name: Copy index.html to 404.html for Vue Router
