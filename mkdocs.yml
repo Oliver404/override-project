@@ -1,11 +1,10 @@
 site_name: Override Project
 site_description: Landing page and documentation for the Override Project
 site_author: Oliver 404
-site_url: https://oliver404.github.io/override-project/   # adjust when live
+site_url: https://oliver404.github.io/override-project/
 repo_url: https://github.com/Oliver404/override-project
 copyright: "© Oliver 404"
 
-# Theme: Material for MkDocs with advanced options
 theme:
   name: material
   logo: assets/logo.png
@@ -33,37 +32,30 @@ theme:
     - search.suggest
   language: en
 
-# Multilingual configuration via mkdocs-static-i18n plugin
 plugins:
   - search:
       lang: ['en', 'es']
   - i18n:
-      default_language: en
       languages:
-        en: English
-        es: Español
-      redirect_on_root: true
-      # Per-language nav can be specified here or inside per-language index files.
-      nav:
-        en:
-          - Home: index.md
-          - Getting started: getting-started.md
-          - Development: development.md
-          - Contributing: contributing.md
-          - Changelog: changelog.md
+        - locale: en
+          name: English
+          build: true
+          default: true
+        - locale: es
+          name: Español
+          build: true
+      nav_translations:
         es:
-          - Inicio: index.md
-          - Empezando: getting-started.md
-          - Desarrollo: development.md
-          - Contribuir: contributing.md
-          - Registro de cambios: changelog.md
-  - git-revision-date-localized:
-      enable_creation_date: true
-      fallback_to_build_date: true
-  - minify:
-      minify_html: true
+          'Getting started': 'Empezando'
+          'Features': 'Características'
+nav:
+  - 'Home': 'index.md'
+  - 'Getting started': 'getting-started.md'
+  - 'Features': 'features-test.md'
+  - 'Development': 'development.md'
+  - 'Contributing': 'contributing.md'
+  - 'Changelog': 'changelog.md'
 
-# Markdown extensions (Material + pymdown)
 markdown_extensions:
   - admonition
   - toc:
@@ -73,17 +65,15 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.pymdownx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.pymdownx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.keys
   - attr_list
   - def_list
 
-# Directory settings
 docs_dir: docs
 site_dir: site
 
-# Extra assets and files to include in the site output
 extra:
   social:
     - icon: fontawesome/brands/github
@@ -96,5 +86,4 @@ extra_css:
 extra_javascript:
   - javascripts/extra.js
 
-# Optionally enable strict mode during CI to fail on broken links
 strict: false

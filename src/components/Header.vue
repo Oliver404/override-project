@@ -6,7 +6,7 @@
       <div class="flex items-center space-x-6">
         <!-- The nav links are also dynamic, preserving the language in the URL -->
         <RouterLink :to="`/${store.language}`" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors" data-i18n="home">Home</RouterLink>
-        <RouterLink :to="`/${store.language}/docs`" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors" data-i18n="documentation">Documentation</RouterLink>
+        <a href="/override-project/docs" target="_blank" rel="noopener noreferrer" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors" data-i18n="documentation">Documentation</a>
 
         <div class="relative">
           <select id="language-switcher" v-model="currentLanguage" @change="switchLanguage" class="appearance-none bg-transparent text-gray-600 dark:text-gray-300 py-1 pl-2 pr-8 rounded-md leading-tight focus:outline-none cursor-pointer">
