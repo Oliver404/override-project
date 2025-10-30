@@ -13,6 +13,9 @@ theme:
     - scheme: default
       primary: indigo
       accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
     - scheme: slate
       primary: indigo
       accent: indigo
@@ -48,13 +51,16 @@ plugins:
         es:
           'Getting started': 'Empezando'
           'Features': 'Características'
+  - blog
 nav:
   - 'Home': 'index.md'
-  - 'Getting started': 'getting-started.md'
-  - 'Features': 'features-test.md'
-  - 'Development': 'development.md'
-  - 'Contributing': 'contributing.md'
-  - 'Changelog': 'changelog.md'
+  - 'Documentation':
+    - 'Getting started': 'getting-started.md'
+    - 'Features': 'features-test.md'
+    - 'Development': 'development.md'
+    - 'Contributing': 'contributing.md'
+    - 'Changelog': 'changelog.md'
+  - 'Blog': 'blog/index.md'
 
 markdown_extensions:
   - admonition

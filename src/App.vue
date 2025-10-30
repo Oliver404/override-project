@@ -2,12 +2,12 @@
   <div :class="store.theme" class="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
     <Header />
     <RouterView :key="route.fullPath" class="flex-grow" />
-    <GlobalFooter v-if="!isDocsPage" />
+    <GlobalFooter />
   </div>
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'; // Eliminamos 'onMounted'
+import { watch } from 'vue'; // Eliminamos 'onMounted'
 import { useRoute } from 'vue-router';
 import { RouterView } from 'vue-router';
 import { store } from './store';
@@ -15,9 +15,6 @@ import Header from '@/components/Header.vue';
 import GlobalFooter from '@/components/GlobalFooter.vue';
 
 const route = useRoute();
-
-// Determines if the current page is a documentation page to conditionally show the footer.
-const isDocsPage = computed(() => route.path.includes('/docs'));
 
 /**
  * Fetches the translation file for the given language and updates the global store.

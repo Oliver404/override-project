@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import DocsView from '../views/DocsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,11 +22,6 @@ const router = createRouter({
           next({ name: 'home', params: { lang: 'en' } }); // Redirect to default if lang is invalid
         }
       }
-    },
-    {
-      path: '/:lang/docs/:page?',
-      name: 'docs',
-      component: DocsView
     }
   ]
 })
