@@ -89,7 +89,4 @@ extra:
 extra_css:
   - styles/overrides.css
 
-extra_javascript:
-  - javascripts/extra.js
-
 strict: false
