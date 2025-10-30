@@ -45,6 +45,7 @@ const switchLanguage = () => {
 
   // Use router.push to navigate to the new URL
   router.push({ name: route.name, params: newParams, query: route.query });
+  store.setLanguage(newLang);
 };
 
 // Watch for changes in the URL's language parameter and update the component's state
@@ -53,7 +54,7 @@ watch(
   (newLang) => {
     if (newLang && ['en', 'es'].includes(newLang)) {
       currentLanguage.value = newLang;
-      store.language = newLang; // Keep the global store in sync
+      store.setLanguage(newLang); // Keep the global store in sync
     }
   },
   { immediate: true }
