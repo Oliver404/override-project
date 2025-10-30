@@ -37,6 +37,10 @@ export const store = reactive({
    * Es asíncrona y devuelve una Promesa, ya que main.js espera su resolución.
    */
   async initializeLanguage() {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      this.language = savedLanguage;
+    }
     // Aquí es donde iría la lógica real para cargar el archivo de traducción
     // por defecto antes de que la aplicación se monte.
     // Por ahora, devolvemos una Promesa que resuelve inmediatamente para permitir que main.js continúe.
@@ -44,5 +48,10 @@ export const store = reactive({
         // console.log('Simulating initial language load...');
         resolve(true); 
     });
+  },
+
+  setLanguage(lang) {
+    this.language = lang;
+    localStorage.setItem('language', lang);
   }
 });
