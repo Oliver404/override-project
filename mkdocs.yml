@@ -41,11 +41,11 @@ plugins:
   - i18n:
       languages:
         - locale: en
-          name: English
+          name: EN
           build: true
           default: true
         - locale: es
-          name: Español
+          name: ES
           build: true
       nav_translations:
         es:

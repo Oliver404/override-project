@@ -1,17 +1,13 @@
-# Override Project
-
-![Header Image](https://via.placeholder.com/1200x400)
-
-Welcome to the Override Project, a modern and flexible documentation theme for MkDocs.
-
-## Features
-
-- **Responsive Design:** Looks great on any device.
-- **Customizable:** Easily change colors, fonts, and more.
-- **Extensible:** Add new features with plugins.
-- **Blog Support:** Built-in blog functionality.
-- **Multi-language:** Support for multiple languages.
-
-## Get Started
-
-To get started, check out the [documentation](getting-started.md).
+<div class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Override Project</h1>
+    <p class="hero-subtitle">"Override Project is being born, the mobile universe is aligning."</p>
+    <div class="social-icons">
+      <a href="#" class="social-icon"><i class="fab fa-x-twitter"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-dribbble"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-discord"></i></a>
+    </div>
+  </div>
+</div>

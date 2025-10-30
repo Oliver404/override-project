@@ -1,7 +1,39 @@
-.md-main__inner {
-  padding-top: 0;
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 80vh;
 }
 
-.md-main__inner > .md-content > .md-typeset > h1:first-of-type {
-  display: none;
+.hero-title {
+  font-size: 4rem;
+  font-weight: 700;
+  background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.social-icons {
+  margin-top: 2rem;
+}
+
+.social-icon {
+  font-size: 1.5rem;
+  margin: 0 1rem;
+  color: var(--md-default-fg-color);
+  transition: color 0.3s;
+}
+
+.social-icon:hover {
+  color: var(--md-primary-fg-color);
+}
+
+[data-md-color-scheme="slate"] .hero-subtitle {
+  color: var(--md-default-fg-color);
 }
