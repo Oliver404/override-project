@@ -1,6 +1,8 @@
 ---
 title: "First Post"
 date: 2024-01-01
+categories:
+  - News
 ---
 
 # Welcome to our blog!

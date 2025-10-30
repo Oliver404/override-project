@@ -26,6 +26,7 @@ theme:
     text: Roboto
     code: Roboto Mono
   features:
+    - navigation.tabs
     - navigation.instant
     - navigation.top
     - navigation.expand
@@ -51,7 +52,10 @@ plugins:
         es:
           'Getting started': 'Empezando'
           'Features': 'Características'
-  - blog
+  - blog:
+      blog_dir: blog
+      archive: true
+      categories: true
 nav:
   - 'Home': 'index.md'
   - 'Documentation':

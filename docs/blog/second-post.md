@@ -1,6 +1,8 @@
 ---
 title: "Second Post"
 date: 2024-01-02
+categories:
+  - Update
 ---
 
 # Our second post is here!
