@@ -20,41 +20,45 @@ const getSlug = (path: string) => {
 }
 
 export const getBlogPosts = async (locale: string): Promise<Post[]> => {
-  const files = import.meta.glob('/blog/**/*.md', { as: 'raw' })
+  const files = import.meta.glob('/blog/**/*.md', { query: '?raw', import: 'default' })
   const posts: Post[] = []
 
   for (const path in files) {
-    if (!path.includes(`/blog/${locale}/`)) {
-      continue
+    if (path.includes(`/blog/${locale}/`)) {
+      const importer = files[path]
+      if (importer) {
+        const rawContent = (await importer()) as string
+        const { data, content } = matter(rawContent)
+        posts.push({
+          slug: getSlug(path),
+          title: data.title,
+          date: data.date,
+          content: marked(content) as string,
+        })
+      }
     }
-    const rawContent = await files[path]()
-    const { data, content } = matter(rawContent)
-    posts.push({
-      slug: getSlug(path),
-      title: data.title,
-      date: data.date,
-      content: marked(content) as string,
-    })
   }
 
   return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
 export const getDocs = async (locale: string): Promise<Doc[]> => {
-  const files = import.meta.glob('/docs/**/*.md', { as: 'raw' })
+  const files = import.meta.glob('/docs/**/*.md', { query: '?raw', import: 'default' })
   const docs: Doc[] = []
 
   for (const path in files) {
-    if (!path.includes(`/docs/${locale}/`)) {
-      continue
+    if (path.includes(`/docs/${locale}/`)) {
+      const importer = files[path]
+      if (importer) {
+        const rawContent = (await importer()) as string
+        const { data, content } = matter(rawContent)
+        docs.push({
+          slug: getSlug(path),
+          title: data.title,
+          content: marked(content) as string,
+        })
+      }
     }
-    const rawContent = await files[path]()
-    const { data, content } = matter(rawContent)
-    docs.push({
-      slug: getSlug(path),
-      title: data.title,
-      content: marked(content) as string,
-    })
   }
 
   return docs

@@ -54,14 +54,14 @@ const activeSlug = ref('')
 onMounted(async () => {
   docs.value = await getDocs(locale.value)
   if (docs.value.length > 0) {
-    activeSlug.value = docs.value[0].slug
+    activeSlug.value = docs.value[0]?.slug ?? ''
   }
 })
 
 watch(locale, async (newLocale) => {
   docs.value = await getDocs(newLocale)
   if (docs.value.length > 0) {
-    activeSlug.value = docs.value[0].slug
+    activeSlug.value = docs.value[0]?.slug ?? ''
   }
 })
 
