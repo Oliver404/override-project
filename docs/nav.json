@@ -1,0 +1,18 @@
+{
+  "en": [
+    {
+      "title": "Getting Started",
+      "children": [
+        "introduction"
+      ]
+    }
+  ],
+  "es": [
+    {
+      "title": "Empezando",
+      "children": [
+        "introduction"
+      ]
+    }
+  ]
+}

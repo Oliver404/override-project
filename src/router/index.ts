@@ -10,7 +10,7 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/docs',
+      path: '/docs/:pathMatch(.*)*',
       name: 'docs',
       component: () => import('../views/DocsView.vue'),
     },
