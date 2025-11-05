@@ -1,6 +1,24 @@
 import matter from 'gray-matter'
 import { marked } from 'marked'
 
+const renderer = new marked.Renderer();
+const originalPara = renderer.paragraph;
+renderer.paragraph = (text) => {
+  if (text.startsWith('---COMPONENT---')) {
+    const json = text.replace(/---COMPONENT---/g, '').trim();
+    try {
+      const data = JSON.parse(json);
+      return `<div data-component="${data.component}" data-props='${JSON.stringify(data.props)}'></div>`;
+    } catch (e) {
+      console.error('Failed to parse component JSON:', e);
+      return '';
+    }
+  }
+  return originalPara.call(renderer, text);
+};
+
+marked.setOptions({ renderer, headerIds: true });
+
 interface Post {
   slug: string;
   title: string;
@@ -12,6 +30,8 @@ interface Doc {
   slug: string;
   title: string;
   content: string;
+  createdAt?: string;
+  updatedAt?: string;
   children?: Doc[];
 }
 
@@ -57,6 +77,8 @@ export const getDoc = async (locale: string, slug: string): Promise<Doc | null> 
       slug,
       title: data.title,
       content: marked(content) as string,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
     }
   }
   return null

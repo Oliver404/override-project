@@ -20,6 +20,7 @@
     "@tailwindcss/cli": "^4.1.16",
     "buffer": "^6.0.3",
     "gray-matter": "^4.0.3",
+    "highlight.js": "^11.11.1",
     "marked": "^16.4.1",
     "pinia": "^3.0.3",
     "playwright": "^1.56.1",

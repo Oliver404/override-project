@@ -33,16 +33,35 @@
     <main class="w-3/4">
       <div v-if="currentDoc" class="prose dark:prose-invert max-w-none">
         <div v-html="currentDoc.content"></div>
+        <div class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <p v-if="currentDoc.createdAt" class="text-sm text-gray-500 dark:text-gray-400">
+            Created on: {{ new Date(currentDoc.createdAt).toLocaleDateString() }}
+          </p>
+          <p v-if="currentDoc.updatedAt" class="text-sm text-gray-500 dark:text-gray-400">
+            Last updated on: {{ new Date(currentDoc.updatedAt).toLocaleDateString() }}
+          </p>
+        </div>
       </div>
     </main>
+    <aside class="w-1/4 pl-8">
+      <div class="sticky top-20">
+        <TableOfContents v-if="currentDoc" :content="currentDoc.content" />
+      </div>
+    </aside>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, h, render, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { getDocs, getDoc } from '@/services/contentService'
+import TableOfContents from '@/components/TableOfContents.vue'
+import CodeBlock from '@/components/CodeBlock.vue'
+
+const components = {
+  CodeBlock,
+};
 
 interface Doc {
   slug: string
@@ -83,6 +102,24 @@ watch(locale, async () => {
 watch(activeSlug, async () => {
   await loadCurrentDoc()
 })
+
+watch(() => currentDoc.value, (newDoc) => {
+  if (newDoc) {
+    nextTick(() => {
+      const contentDiv = document.querySelector('.prose > div');
+      if (contentDiv) {
+        contentDiv.querySelectorAll('[data-component]').forEach(el => {
+          const componentName = el.getAttribute('data-component');
+          const props = JSON.parse(el.getAttribute('data-props') || '{}');
+          if (componentName && components[componentName]) {
+            const vnode = h(components[componentName], props);
+            render(vnode, el);
+          }
+        });
+      }
+    });
+  }
+}, { deep: true, immediate: true });
 
 const filteredDocs = computed(() => {
   if (!searchQuery.value) {
