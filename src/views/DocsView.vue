@@ -83,7 +83,8 @@ const searchQuery = ref('')
 const currentDoc = ref<Doc | null>(null)
 const headings = ref<Heading[]>([])
 
-const activeSlug = computed(() => route.params.slug as string)
+// const activeSlug = computed(() => route.params.slug as string)
+const activeSlug = computed(() => route.params.pathMatch?.at(0))
 
 const loadDocs = async () => {
   docs.value = await getDocs(locale.value)
@@ -119,6 +120,8 @@ watch(() => currentDoc.value, (newDoc) => {
         contentDiv.querySelectorAll('[data-component]').forEach(el => {
           const componentName = el.getAttribute('data-component');
           const props = JSON.parse(el.getAttribute('data-props') || '{}');
+          console.log(componentName);
+          console.log(components['CodeBlock']);
           if (componentName && components[componentName]) {
             const vnode = h(components[componentName], props);
             render(vnode, el);

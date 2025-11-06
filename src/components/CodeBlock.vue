@@ -11,7 +11,7 @@
       </button>
     </div>
     <div class="code-container">
-      <pre ref="codeContainer"><code :class="language">{{ currentCode }}</code></pre>
+      <pre ref="codeContainer" style="--tw-prose-pre-bg: #2b2b2b"><code :class="language">{{ currentCode }}</code></pre>
       <button @click="copyToClipboard" class="copy-button">
         <svg v-if="!copied" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
           <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path>
@@ -27,7 +27,8 @@
 import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import { useSettingsStore } from '@/stores/settings';
 import hljs from 'highlight.js';
-import 'highlight.js/styles/atom-one-dark.css';
+import 'highlight.js/styles/base16/darcula.min.css';
+
 
 const props = defineProps<{
   code: string | { label: string; code: string; lang: string }[];
@@ -94,6 +95,7 @@ const highlightCode = () => {
   if (codeContainer.value) {
     const codeElement = codeContainer.value.querySelector('code');
     if (codeElement) {
+      codeElement.removeAttribute('data-highlighted');
       hljs.highlightElement(codeElement);
     }
   }

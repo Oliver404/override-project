@@ -4,8 +4,8 @@ import { marked } from 'marked'
 const renderer = new marked.Renderer();
 const originalPara = renderer.paragraph;
 renderer.paragraph = (text) => {
-  if (text.startsWith('---COMPONENT---')) {
-    const json = text.replace(/---COMPONENT---/g, '').trim();
+  if (text.text.startsWith('---COMPONENT---')) {
+    const json = text.text.replace(/---COMPONENT---/g, '').trim();
     try {
       const data = JSON.parse(json);
       return `<div data-component="${data.component}" data-props='${JSON.stringify(data.props)}'></div>`;

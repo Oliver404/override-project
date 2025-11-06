@@ -24,12 +24,49 @@ The following is an example of a tabbed code block. You can switch between Kotli
       {
         "label": "Kotlin",
         "lang": "kotlin",
-        "code": "fun main() {\\n    println(\\"Hello, World!\\")\\n}"
+        "code": "fun main() {\n    println(\"Hello, World!\")\n}"
       },
       {
         "label": "Java",
         "lang": "java",
-        "code": "public class HelloWorld {\\n    public static void main(String[] args) {\\n        System.out.println(\\"Hello, World!\\");\\n    }\\n}"
+        "code": "public class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}"
+      }
+    ]
+  }
+}
+---COMPONENT---
+
+
+---COMPONENT---
+{
+  "component": "CodeBlock",
+  "props": {
+    "code": [
+      {
+        "label": "Kotlin",
+        "lang": "kotlin",
+        "code": "fun main() {\n    println(\"Hello, World!\")\n}"
+      },
+      {
+        "label": "Java",
+        "lang": "java",
+        "code": "public class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}"
+      }
+    ]
+  }
+}
+---COMPONENT---
+
+
+---COMPONENT---
+{
+  "component": "CodeBlock",
+  "props": {
+    "code": [
+      {
+        "label": "Gradle",
+        "lang": "gradle",
+        "code": "dependencies {\n\timplement(\"como.oliver.b.asdf:1.0.0\")\n}"
       }
     ]
   }
