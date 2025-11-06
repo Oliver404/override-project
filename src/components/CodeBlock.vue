@@ -4,7 +4,7 @@
       <button
         v-for="(tab, index) in tabs"
         :key="index"
-        @click="settings.setCodeLang(tab.label)"
+        @click="setActiveTab(tab.label)"
         :class="{ 'active': activeTabLabel === tab.label }"
       >
         {{ tab.label }}
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import { useSettingsStore } from '@/stores/settings';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
@@ -37,6 +37,7 @@ const props = defineProps<{
 const settings = useSettingsStore();
 const codeContainer = ref<HTMLElement | null>(null);
 const copied = ref(false);
+const localActiveTab = ref(0);
 
 const tabs = computed(() => {
   if (Array.isArray(props.code)) {
@@ -45,19 +46,33 @@ const tabs = computed(() => {
   return null;
 });
 
+const groupKey = computed(() => {
+  if (tabs.value) {
+    return tabs.value.map(tab => tab.label).sort().join(',');
+  }
+  return null;
+});
+
+const activeTabLabel = computed(() => {
+  if (tabs.value && groupKey.value) {
+    return settings.codeLangGroups[groupKey.value] || tabs.value[0].label;
+  }
+  return null;
+});
+
 const activeTabIndex = computed(() => {
   if (tabs.value) {
-    return tabs.value.findIndex(tab => tab.label === settings.selectedCodeLang);
+    const label = activeTabLabel.value;
+    return tabs.value.findIndex(tab => tab.label === label);
   }
   return -1;
 });
 
-const activeTabLabel = computed(() => {
-  if (tabs.value && activeTabIndex.value !== -1) {
-    return tabs.value[activeTabIndex.value].label;
+const setActiveTab = (label: string) => {
+  if (groupKey.value) {
+    settings.setCodeLangForGroup(groupKey.value, label);
   }
-  return null;
-});
+};
 
 const currentCode = computed(() => {
   if (tabs.value) {
@@ -85,7 +100,9 @@ const highlightCode = () => {
 };
 
 onMounted(highlightCode);
-watch(currentCode, highlightCode);
+watch(currentCode, () => {
+  nextTick(highlightCode);
+});
 
 const copyToClipboard = () => {
   navigator.clipboard.writeText(currentCode.value).then(() => {
@@ -98,6 +115,7 @@ const copyToClipboard = () => {
 </script>
 
 <style scoped>
+/* Styles remain the same */
 .code-block {
   position: relative;
   margin-bottom: 1rem;

@@ -4,7 +4,7 @@ export const useSettingsStore = defineStore('settings', {
   state: () => ({
     theme: 'light',
     language: 'en',
-    selectedCodeLang: 'Kotlin', // Default language for code blocks
+    codeLangGroups: {} as Record<string, string>,
   }),
   actions: {
     initialize() {
@@ -27,8 +27,8 @@ export const useSettingsStore = defineStore('settings', {
       this.language = language;
       localStorage.setItem('language', language);
     },
-    setCodeLang(lang: string) {
-      this.selectedCodeLang = lang;
+    setCodeLangForGroup(groupKey: string, lang: string) {
+      this.codeLangGroups[groupKey] = lang;
     },
     applyTheme() {
       if (this.theme === 'dark') {

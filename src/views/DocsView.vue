@@ -45,7 +45,7 @@
     </main>
     <aside class="w-1/4 pl-8">
       <div class="sticky top-20">
-        <TableOfContents v-if="currentDoc" :content="currentDoc.content" />
+        <TableOfContents v-if="headings.length" :headings="headings" />
       </div>
     </aside>
   </div>
@@ -70,11 +70,18 @@ interface Doc {
   children?: Doc[]
 }
 
+interface Heading {
+  id: string;
+  text: string;
+  level: number;
+}
+
 const { locale } = useI18n()
 const route = useRoute()
 const docs = ref<Doc[]>([])
 const searchQuery = ref('')
 const currentDoc = ref<Doc | null>(null)
+const headings = ref<Heading[]>([])
 
 const activeSlug = computed(() => route.params.slug as string)
 
@@ -108,6 +115,7 @@ watch(() => currentDoc.value, (newDoc) => {
     nextTick(() => {
       const contentDiv = document.querySelector('.prose > div');
       if (contentDiv) {
+        // Mount dynamic components
         contentDiv.querySelectorAll('[data-component]').forEach(el => {
           const componentName = el.getAttribute('data-component');
           const props = JSON.parse(el.getAttribute('data-props') || '{}');
@@ -116,6 +124,21 @@ watch(() => currentDoc.value, (newDoc) => {
             render(vnode, el);
           }
         });
+
+        // Extract headings for TOC
+        const newHeadings: Heading[] = [];
+        contentDiv.querySelectorAll('h2, h3, h4, h5, h6').forEach((heading) => {
+          const text = heading.textContent || '';
+          const id = heading.id;
+          if (id) {
+            newHeadings.push({
+              id,
+              text,
+              level: parseInt(heading.tagName.substring(1), 10),
+            });
+          }
+        });
+        headings.value = newHeadings;
       }
     });
   }
@@ -136,7 +159,7 @@ const filteredDocs = computed(() => {
 </script>
 
 <style>
-/* Add some styles for the prose class to make the rendered markdown look good */
+/* Styles remain the same */
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
   margin-top: 1.25em;
   margin-bottom: 0.5em;
