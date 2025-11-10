@@ -22,13 +22,14 @@
     <h1
       class="text-8xl font-extrabold text-gray-900 dark:text-white sm:text-7xl md:text-8xl mb-6"
     >
-      {{ $t('project_name') }}
+      404
     </h1>
 
     <p class="max-w-md text-base text-gray-500 sm:text-lg md:text-xl md:max-w-3xl">
-      {{ $t('home_subtitle')}}
+      Page not found
     </p>
 
+    <!-- Íconos de redes sociales -->
     <!-- Íconos de redes sociales -->
     <div class="flex space-x-6 justify-center mb-6 mt-10">
       <a
@@ -78,19 +79,6 @@
     </div>
   </div>
 </template>
-
-<!-- Si no tienes los íconos de Font Awesome aún -->
-<script setup>
-</script>
-
-<!-- Agrega este enlace en tu index.html si no está ya -->
-<!--
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
--->
-
 
 <script setup lang="ts">
 import { Github, Twitter, Linkedin } from "lucide-vue-next";

@@ -4,7 +4,7 @@
       <nav class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         <div class="flex items-center">
           <router-link to="/" class="text-2xl font-bold text-gray-800 dark:text-white">
-            MyApp
+            {{ $t('project_name') }}
           </router-link>
         </div>
         <div class="hidden md:flex items-center space-x-6">
@@ -25,7 +25,7 @@
 
     <footer class="mt-auto w-full bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
       <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-gray-500 dark:text-gray-400">
-        <p>&copy; {{ new Date().getFullYear() }} MyApp. All rights reserved.</p>
+        <p>&copy; {{ new Date().getFullYear() }} Override Project. All rights reserved.</p>
       </div>
     </footer>
   </div>

@@ -19,6 +19,12 @@ const router = createRouter({
       name: 'blog',
       component: () => import('../views/BlogView.vue'),
     },
+    // 👇 ruta comodín para páginas inexistentes
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('../views/P404.vue'),
+    }
   ],
 })
 
