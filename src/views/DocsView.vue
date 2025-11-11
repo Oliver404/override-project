@@ -10,21 +10,52 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300"
           />
         </div>
+<!--        <nav>-->
+<!--          <ul>-->
+<!--            <li v-for="group in filteredDocs" :key="group.slug" class="mb-4">-->
+<!--              <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">{{ group.title }}</h3>-->
+<!--              <ul>-->
+<!--                <li v-for="doc in group.children" :key="doc.slug">-->
+<!--                  <router-link-->
+<!--                    :to="`/docs/${doc.slug}`"-->
+<!--                    class="block py-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"-->
+<!--                    :class="{ 'font-bold text-indigo-600 dark:text-indigo-400': activeSlug === doc.slug }"-->
+<!--                  >-->
+<!--                    {{ doc.title }}-->
+<!--                  </router-link>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--        </nav>-->
         <nav>
           <ul>
-            <li v-for="group in filteredDocs" :key="group.slug" class="mb-4">
-              <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">{{ group.title }}</h3>
-              <ul>
-                <li v-for="doc in group.children" :key="doc.slug">
-                  <router-link
-                    :to="`/docs/${doc.slug}`"
-                    class="block py-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                    :class="{ 'font-bold text-indigo-600 dark:text-indigo-400': activeSlug === doc.slug }"
-                  >
-                    {{ doc.title }}
-                  </router-link>
-                </li>
-              </ul>
+            <li v-for="item in filteredDocs" :key="item.slug" class="mb-4">
+
+              <template v-if="'children' in item">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">{{ item.title }}</h3>
+                <ul>
+                  <li v-for="doc in item.children" :key="doc.slug">
+                    <router-link
+                      :to="`/docs/${doc.slug}`"
+                      class="block py-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                      :class="{ 'font-bold text-indigo-600 dark:text-indigo-400': activeSlug === doc.slug }"
+                    >
+                      {{ doc.title }}
+                    </router-link>
+                  </li>
+                </ul>
+              </template>
+
+              <template v-else>
+                <router-link
+                  :to="`/docs/${item.slug}`"
+                  class="block py-2 text-lg font-bold text-gray-800 hover:text-gray-900 dark:text-white dark:hover:text-white"
+                  :class="{ 'font-bold text-indigo-600 dark:text-indigo-400': activeSlug === item.slug }"
+                >
+                  {{ item.title }}
+                </router-link>
+              </template>
             </li>
           </ul>
         </nav>
@@ -78,7 +109,8 @@ interface Heading {
 
 const { locale } = useI18n()
 const route = useRoute()
-const docs = ref<Doc[]>([])
+// const docs = ref<Doc[]>([])
+const docs = ref<(Doc | DocGroup)[]>([])
 const searchQuery = ref('')
 const currentDoc = ref<Doc | null>(null)
 const headings = ref<Heading[]>([])
@@ -88,14 +120,37 @@ const activeSlug = computed(() => route.params.pathMatch?.at(0))
 
 const loadDocs = async () => {
   docs.value = await getDocs(locale.value)
+  console.log("Hola");
 }
 
 const loadCurrentDoc = async () => {
-  const slug = activeSlug.value || docs.value[0]?.children?.[0]?.slug
+  let slug = activeSlug.value
+
+  // Si no hay un slug activo en la URL, encontramos el primer slug
+  if (!slug && docs.value.length > 0) {
+    const firstItem = docs.value[0]
+
+    // 1. Es un grupo: toma el slug del primer hijo
+    if ('children' in firstItem && firstItem.children.length > 0) {
+      slug = firstItem.children[0].slug
+    }
+    // 2. Es un documento suelto: toma su slug
+    else if (!('children' in firstItem)) {
+      slug = firstItem.slug
+    }
+  }
+
   if (slug) {
     currentDoc.value = await getDoc(locale.value, slug)
   }
 }
+
+// const loadCurrentDoc = async () => {
+//   const slug = activeSlug.value || docs.value[0]?.children?.[0]?.slug
+//   if (slug) {
+//     currentDoc.value = await getDoc(locale.value, slug)
+//   }
+// }
 
 onMounted(async () => {
   await loadDocs()
@@ -147,17 +202,50 @@ watch(() => currentDoc.value, (newDoc) => {
   }
 }, { deep: true, immediate: true });
 
+// const filteredDocs = computed(() => {
+//   if (!searchQuery.value) {
+//     return docs.value
+//   }
+//   return docs.value.map(group => {
+//     const filteredChildren = group.children?.filter(doc =>
+//       doc.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+//       doc.content.toLowerCase().includes(searchQuery.value.toLowerCase())
+//     )
+//     return { ...group, children: filteredChildren }
+//   }).filter(group => group.children && group.children.length > 0)
+// })
 const filteredDocs = computed(() => {
   if (!searchQuery.value) {
     return docs.value
   }
-  return docs.value.map(group => {
-    const filteredChildren = group.children?.filter(doc =>
-      doc.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      doc.content.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-    return { ...group, children: filteredChildren }
-  }).filter(group => group.children && group.children.length > 0)
+
+  const query = searchQuery.value.toLowerCase()
+
+  return docs.value.map(item => {
+    // Si es un grupo
+    if ('children' in item) {
+      const filteredChildren = item.children?.filter(doc =>
+        doc.title.toLowerCase().includes(query) ||
+        doc.content.toLowerCase().includes(query)
+      )
+      // Devuelve el grupo con los hijos filtrados
+      return { ...item, children: filteredChildren }
+    } else {
+      // Si es un documento suelto
+      // Devuelve el documento solo si coincide con la búsqueda
+      if (item.title.toLowerCase().includes(query) || item.content.toLowerCase().includes(query)) {
+        return item
+      }
+      // Si no coincide, devolvemos null para filtrarlo más tarde
+      return null
+    }
+  }).filter(item => {
+    if (!item) return false // Filtrar documentos sueltos que no coinciden
+    if ('children' in item) {
+      return item.children && item.children.length > 0 // Filtrar grupos sin hijos
+    }
+    return true // Mantener documentos sueltos que sí coinciden
+  }) as (Doc | DocGroup)[] // Aseguramos el tipo de retorno
 })
 </script>
 

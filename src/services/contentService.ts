@@ -26,13 +26,28 @@ interface Post {
   content: string;
 }
 
+// interface Doc {
+//   slug: string;
+//   title: string;
+//   content: string;
+//   createdAt?: string;
+//   updatedAt?: string;
+//   children?: Doc[];
+// }
+
+// Define Doc (para archivos sueltos) y Grupo (para agrupaciones)
 interface Doc {
-  slug: string;
-  title: string;
-  content: string;
-  createdAt?: string;
-  updatedAt?: string;
-  children?: Doc[];
+  slug: string
+  title: string
+  content: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+interface DocGroup {
+  slug: string // Slug del grupo (opcional/generado)
+  title: string
+  children: Doc[]
 }
 
 import navConfig from '../../docs/nav.json'
@@ -84,25 +99,64 @@ export const getDoc = async (locale: string, slug: string): Promise<Doc | null> 
   return null
 }
 
-export const getDocs = async (locale: string): Promise<Doc[]> => {
-  const nav = (navConfig as Record<string, any>)[locale] || []
-  const docs: Doc[] = []
+// Define un tipo para el ítem de navegación, que puede ser un Doc o un Grupo de Docs
+type NavItem = Doc | { slug: string; title: string; children: Doc[] };
 
-  for (const group of nav) {
-    const children: Doc[] = []
-    for (const slug of group.children) {
-      const doc = await getDoc(locale, slug)
+// Exporta la función getDocs con el nuevo tipo de retorno
+export const getDocs = async (locale: string): Promise<NavItem[]> => {
+  const nav = (navConfig as Record<string, (string | { title: string; children: string[] })[]>)[locale] || [];
+  const navItems: NavItem[] = []; // Usamos NavItem[] para almacenar grupos y docs
+
+  for (const item of nav) {
+    if (typeof item === 'string') {
+      // 1. Es un documento suelto (slug)
+      const doc = await getDoc(locale, item);
       if (doc) {
-        children.push(doc)
+        navItems.push(doc);
+      }
+    } else {
+      // 2. Es un grupo
+      const group = item;
+      const children: Doc[] = [];
+      for (const slug of group.children) {
+        const doc = await getDoc(locale, slug);
+        if (doc) {
+          children.push(doc);
+        }
+      }
+      // Solo agregamos el grupo si tiene hijos
+      if (children.length > 0) {
+        navItems.push({
+          slug: group.title.toLowerCase().replace(/\s/g, '-'),
+          title: group.title,
+          children,
+        });
       }
     }
-    docs.push({
-      slug: group.title.toLowerCase().replace(/\s/g, '-'),
-      title: group.title,
-      content: '',
-      children,
-    })
   }
 
-  return docs
+  return navItems;
 }
+
+// export const getDocs = async (locale: string): Promise<Doc[]> => {
+//   const nav = (navConfig as Record<string, any>)[locale] || []
+//   const docs: Doc[] = []
+//
+//   for (const group of nav) {
+//     const children: Doc[] = []
+//     for (const slug of group.children) {
+//       const doc = await getDoc(locale, slug)
+//       if (doc) {
+//         children.push(doc)
+//       }
+//     }
+//     docs.push({
+//       slug: group.title.toLowerCase().replace(/\s/g, '-'),
+//       title: group.title,
+//       content: '',
+//       children,
+//     })
+//   }
+//
+//   return docs
+// }
