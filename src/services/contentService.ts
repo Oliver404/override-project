@@ -102,61 +102,46 @@ export const getDoc = async (locale: string, slug: string): Promise<Doc | null> 
 // Define un tipo para el ítem de navegación, que puede ser un Doc o un Grupo de Docs
 type NavItem = Doc | { slug: string; title: string; children: Doc[] };
 
-// Exporta la función getDocs con el nuevo tipo de retorno
-export const getDocs = async (locale: string): Promise<NavItem[]> => {
-  const nav = (navConfig as Record<string, (string | { title: string; children: string[] })[]>)[locale] || [];
-  const navItems: NavItem[] = []; // Usamos NavItem[] para almacenar grupos y docs
 
-  for (const item of nav) {
+type NavConfigItem = string | { title: string; children: NavConfigItem[] };
+type NavResultItem = Doc | DocGroup; // DocGroup es recursivo, definido arriba
+
+// Función recursiva para procesar los hijos de un grupo
+const processNavItems = async (locale: string, navItems: NavConfigItem[]): Promise<NavResultItem[]> => {
+  const results: NavResultItem[] = [];
+
+  for (const item of navItems) {
     if (typeof item === 'string') {
-      // 1. Es un documento suelto (slug)
+      // Caso base: Es un SLUG (documento final)
       const doc = await getDoc(locale, item);
       if (doc) {
-        navItems.push(doc);
+        results.push(doc);
       }
     } else {
-      // 2. Es un grupo
-      const group = item;
-      const children: Doc[] = [];
-      for (const slug of group.children) {
-        const doc = await getDoc(locale, slug);
-        if (doc) {
-          children.push(doc);
-        }
-      }
-      // Solo agregamos el grupo si tiene hijos
-      if (children.length > 0) {
-        navItems.push({
-          slug: group.title.toLowerCase().replace(/\s/g, '-'),
-          title: group.title,
-          children,
+      // Caso recursivo: Es un GRUPO
+      const childrenResults = await processNavItems(locale, item.children); // ¡Llamada recursiva!
+
+      if (childrenResults.length > 0) {
+        results.push({
+          slug: item.title.toLowerCase().replace(/\s/g, '-'),
+          title: item.title,
+          children: childrenResults as DocChild[], // Asignamos los hijos procesados
         });
       }
     }
   }
+  return results;
+};
 
-  return navItems;
+
+export const getDocs = async (locale: string): Promise<NavResultItem[]> => {
+  const nav = (navConfig as Record<string, NavConfigItem[]>)[locale] || [];
+
+  // Usamos la función recursiva para procesar el array de navegación principal
+  const docs = await processNavItems(locale, nav);
+
+  // NOTA: La función getDoc que usas internamente se mantiene igual
+  // Se asume que getDoc retorna Doc | null
+
+  return docs;
 }
-
-// export const getDocs = async (locale: string): Promise<Doc[]> => {
-//   const nav = (navConfig as Record<string, any>)[locale] || []
-//   const docs: Doc[] = []
-//
-//   for (const group of nav) {
-//     const children: Doc[] = []
-//     for (const slug of group.children) {
-//       const doc = await getDoc(locale, slug)
-//       if (doc) {
-//         children.push(doc)
-//       }
-//     }
-//     docs.push({
-//       slug: group.title.toLowerCase().replace(/\s/g, '-'),
-//       title: group.title,
-//       content: '',
-//       children,
-//     })
-//   }
-//
-//   return docs
-// }

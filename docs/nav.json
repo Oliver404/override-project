@@ -4,17 +4,30 @@
       "title": "Getting Started",
       "children": [
         "introduction",
+        {
+          "title": "Advanced Topics",
+          "children": [
+            "configuration",
+            "deployment"
+          ]
+        },
         "sample-page"
       ]
     },
     "license",
-    "contributing"
+    "sample-page"
   ],
   "es": [
     {
       "title": "Empezando",
       "children": [
-        "introduction"
+        "introduction",
+        {
+          "title": "Temas Avanzados",
+          "children": [
+            "configuracion"
+          ]
+        }
       ]
     },
     "licencia"

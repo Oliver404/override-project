@@ -10,41 +10,13 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300"
           />
         </div>
-<!--        <nav>-->
-<!--          <ul>-->
-<!--            <li v-for="group in filteredDocs" :key="group.slug" class="mb-4">-->
-<!--              <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">{{ group.title }}</h3>-->
-<!--              <ul>-->
-<!--                <li v-for="doc in group.children" :key="doc.slug">-->
-<!--                  <router-link-->
-<!--                    :to="`/docs/${doc.slug}`"-->
-<!--                    class="block py-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"-->
-<!--                    :class="{ 'font-bold text-indigo-600 dark:text-indigo-400': activeSlug === doc.slug }"-->
-<!--                  >-->
-<!--                    {{ doc.title }}-->
-<!--                  </router-link>-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </nav>-->
+
         <nav>
           <ul>
             <li v-for="item in filteredDocs" :key="item.slug" class="mb-4">
 
               <template v-if="'children' in item">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">{{ item.title }}</h3>
-                <ul>
-                  <li v-for="doc in item.children" :key="doc.slug">
-                    <router-link
-                      :to="`/docs/${doc.slug}`"
-                      class="block py-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                      :class="{ 'font-bold text-indigo-600 dark:text-indigo-400': activeSlug === doc.slug }"
-                    >
-                      {{ doc.title }}
-                    </router-link>
-                  </li>
-                </ul>
+                <NavGroup :group="item" :activeSlug="activeSlug" />
               </template>
 
               <template v-else>
@@ -59,6 +31,7 @@
             </li>
           </ul>
         </nav>
+
       </div>
     </aside>
     <main class="w-3/4">
@@ -89,6 +62,7 @@ import { useRoute } from 'vue-router'
 import { getDocs, getDoc } from '@/services/contentService'
 import TableOfContents from '@/components/TableOfContents.vue'
 import CodeBlock from '@/components/CodeBlock.vue'
+import NavGroup from '@/components/NavGroup.vue'
 
 const components = {
   CodeBlock,
@@ -98,8 +72,21 @@ interface Doc {
   slug: string
   title: string
   content: string
-  children?: Doc[]
+  createdAt?: string
+  updatedAt?: string
 }
+
+// Un Grupo puede contener un array de Docs o de otros DocGroups
+type DocChild = Doc | DocGroup;
+
+interface DocGroup {
+  slug: string
+  title: string
+  children: DocChild[] // ¡Cambio importante!
+}
+
+// El array principal de docs contiene Doc's sueltos o DocGroups
+type NavItem = Doc | DocGroup;
 
 interface Heading {
   id: string;
