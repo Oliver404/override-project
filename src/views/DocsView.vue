@@ -13,17 +13,26 @@
 
         <nav>
           <ul>
-            <li v-for="item in filteredDocs" :key="item.slug" class="mb-4">
+            <li v-for="item in filteredDocs" :key="item.slug">
 
               <template v-if="'children' in item">
                 <NavGroup :group="item" :activeSlug="activeSlug" />
               </template>
 
               <template v-else>
+<!--                <router-link-->
+<!--                  :to="`/docs/${item.slug}`"-->
+<!--                  class="block py-2 font-bold text-gray-800 hover:text-gray-900 dark:text-white dark:hover:text-white mb-4"-->
+<!--                  :class="{ 'font-bold text-indigo-600 dark:text-indigo-400': activeSlug === item.slug }"-->
+<!--                >-->
+<!--                  {{ item.title }}-->
+<!--                </router-link>-->
+
                 <router-link
                   :to="`/docs/${item.slug}`"
-                  class="block py-2 text-lg font-bold text-gray-800 hover:text-gray-900 dark:text-white dark:hover:text-white"
-                  :class="{ 'font-bold text-indigo-600 dark:text-indigo-400': activeSlug === item.slug }"
+                  class="block py-2 px-3 rounded-r-full font-bold text-gray-800 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white mb-4 transition-colors duration-150"
+
+                  :class="{'font-bold text-gray-900 dark:text-indigo-400 bg-indigo-200 dark:bg-gray-700/50': activeSlug === item.slug}"
                 >
                   {{ item.title }}
                 </router-link>

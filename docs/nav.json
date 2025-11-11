@@ -8,14 +8,15 @@
           "title": "Advanced Topics",
           "children": [
             "configuration",
-            "deployment"
+            "deployment",
+            "sample-page"
           ]
-        },
-        "sample-page"
+        }
+
       ]
     },
     "license",
-    "sample-page"
+    "contributing"
   ],
   "es": [
     {
