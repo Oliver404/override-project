@@ -14,22 +14,47 @@
 </template>
 -->
 
-
 <template>
+  <div class="min-h-screen flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8">
+      <h1 class="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-6 leading-tight">
+        {{ $t('project_name') }}
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
+        {{ $t('home_subtitle')}}
+      </p>
+       <div class="mt-12 flex justify-center space-x-6">
+          <a href="https://twitter.com/OverridePjt" target="_blank" class="text-gray-400 hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 transform transition-transform duration-300 hover:scale-110">
+              <i class="fa-brands fa-x-twitter fa-2x"></i>
+          </a>
+          <a href="https://www.instagram.com/overrideproject" target="_blank" class="text-gray-400 hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 transform transition-transform duration-300 hover:scale-110">
+              <i class="fa-brands fa-instagram fa-2x"></i>
+          </a>
+          <a href="https://www.threads.net/@overrideproject" target="_blank" class="text-gray-400 hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 transform transition-transform duration-300 hover:scale-110">
+              <i class="fa-brands fa-threads fa-2x"></i>
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=61579024295567" target="_blank" class="text-gray-400 hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 transform transition-transform duration-300 hover:scale-110">
+              <i class="fa-brands fa-facebook fa-2x"></i>
+          </a>
+          <a href="https://discord.gg/ZsbQDWPy" target="_blank" class="text-gray-400 hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 transform transition-transform duration-300 hover:scale-110">
+              <i class="fa-brands fa-discord fa-2x"></i>
+          </a>
+      </div>
+    </div>
+</template>
+
+<!-- <template>
   <div
     class="min-h-screen flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8"
   >
-    <h1
-      class="text-8xl font-extrabold text-gray-900 dark:text-white sm:text-7xl md:text-8xl mb-6"
-    >
+    <h1 class="text-8xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-6 leading-tight">
       {{ $t('project_name') }}
     </h1>
+
 
     <p class="max-w-md text-base text-gray-500 sm:text-lg md:text-xl md:max-w-3xl">
       {{ $t('home_subtitle')}}
     </p>
 
-    <!-- Íconos de redes sociales -->
     <div class="flex space-x-6 justify-center mb-6 mt-10">
       <a
         href="https://twitter.com/OverridePjt"
@@ -77,7 +102,7 @@
       </a>
     </div>
   </div>
-</template>
+</template> -->
 
 <!-- Si no tienes los íconos de Font Awesome aún -->
 <script setup>

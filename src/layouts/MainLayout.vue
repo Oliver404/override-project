@@ -3,7 +3,7 @@
     <header class="sticky top-0 z-40 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
       <nav class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         <div class="flex items-center">
-          <router-link to="/" class="text-2xl font-bold text-gray-800 dark:text-white">
+          <router-link to="/" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
             {{ $t('project_name') }}
           </router-link>
         </div>
